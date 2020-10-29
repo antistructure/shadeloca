@@ -1,0 +1,244 @@
+directive @embedded on OBJECT
+directive @collection(name: String!) on OBJECT
+directive @index(name: String!) on FIELD_DEFINITION
+directive @resolver(
+  name: String
+  paginated: Boolean! = false
+) on FIELD_DEFINITION
+directive @relation(name: String) on FIELD_DEFINITION
+directive @unique(index: String) on FIELD_DEFINITION
+
+type Mutation {
+  # Delete an existing document in the collection of 'Permissions'
+  deletePermissions(
+    # The 'Permissions' document's ID
+    id: ID!
+  ): Permissions
+  # Update an existing document in the collection of 'User'
+  updateUser(
+    # The 'User' document's ID
+    id: ID!
+    # 'User' input values
+    data: UserInput!
+  ): User
+  # Create a new document in the collection of 'User'
+  createUser(
+    # 'User' input values
+    data: UserInput!
+  ): User!
+  # Create a new document in the collection of 'Permissions'
+  createPermissions(
+    # 'Permissions' input values
+    data: PermissionsInput!
+  ): Permissions!
+  # Update an existing document in the collection of 'Post'
+  updatePost(
+    # The 'Post' document's ID
+    id: ID!
+    # 'Post' input values
+    data: PostInput!
+  ): Post
+  # Update an existing document in the collection of 'Permissions'
+  updatePermissions(
+    # The 'Permissions' document's ID
+    id: ID!
+    # 'Permissions' input values
+    data: PermissionsInput!
+  ): Permissions
+  # Delete an existing document in the collection of 'User'
+  deleteUser(
+    # The 'User' document's ID
+    id: ID!
+  ): User
+  # Delete an existing document in the collection of 'Post'
+  deletePost(
+    # The 'Post' document's ID
+    id: ID!
+  ): Post
+  # Create a new document in the collection of 'Product'
+  createProduct(
+    # 'Product' input values
+    data: ProductInput!
+  ): Product!
+  # Create a new document in the collection of 'Post'
+  createPost(
+    # 'Post' input values
+    data: PostInput!
+  ): Post!
+  # Update an existing document in the collection of 'Product'
+  updateProduct(
+    # The 'Product' document's ID
+    id: ID!
+    # 'Product' input values
+    data: ProductInput!
+  ): Product
+  # Delete an existing document in the collection of 'Product'
+  deleteProduct(
+    # The 'Product' document's ID
+    id: ID!
+  ): Product
+}
+
+type Permissions {
+  editOwnPost: Boolean!
+  editOwnProduct: Boolean!
+  deleteAnyPost: Boolean!
+  # The document's ID.
+  _id: ID!
+  deleteOwnPost: Boolean!
+  editAnyPost: Boolean!
+  deleteAnyProduct: Boolean!
+  deleteOwnProduct: Boolean!
+  editAnyProduct: Boolean!
+  createProduct: Boolean!
+  createPost: Boolean!
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# 'Permissions' input values
+input PermissionsInput {
+  createPost: Boolean!
+  editOwnPost: Boolean!
+  editAnyPost: Boolean!
+  deleteOwnPost: Boolean!
+  deleteAnyPost: Boolean!
+  createProduct: Boolean!
+  editOwnProduct: Boolean!
+  editAnyProduct: Boolean!
+  deleteOwnProduct: Boolean!
+  deleteAnyProduct: Boolean!
+}
+
+type Post {
+  author: User!
+  # The document's ID.
+  _id: ID!
+  isFeatured: Boolean!
+  slug: String!
+  id: ID!
+  isDeleted: Boolean!
+  title: String!
+  html: String!
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# Allow manipulating the relationship between the types 'Post' and 'User' using the field 'Post.author'.
+input PostAuthorRelation {
+  # Create a document of type 'User' and associate it with the current document.
+  create: UserInput
+  # Connect a document of type 'User' with the current document using its ID.
+  connect: ID
+}
+
+# 'Post' input values
+input PostInput {
+  id: ID!
+  title: String!
+  slug: String!
+  html: String!
+  isFeatured: Boolean!
+  author: PostAuthorRelation
+  isDeleted: Boolean!
+}
+
+type Product {
+  name: String!
+  description: String
+  # The document's ID.
+  _id: ID!
+  tags: [String]
+  price: Float!
+  productLink: String
+  productType: String
+  brand: String!
+  rating: Float
+  category: String
+  imageLink: String
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# 'Product' input values
+input ProductInput {
+  brand: String!
+  name: String!
+  description: String
+  productLink: String
+  imageLink: String
+  productType: String
+  category: String
+  tags: [String]
+  price: Float!
+  rating: Float
+}
+
+# The pagination object for elements of type 'Product'.
+type ProductPage {
+  # The elements of type 'Product' in this page.
+  data: [Product]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
+type Query {
+  # Find a document from the collection of 'Product' by its id.
+  findProductByID(
+    # The 'Product' document's ID
+    id: ID!
+  ): Product
+  # Find a document from the collection of 'Post' by its id.
+  findPostByID(
+    # The 'Post' document's ID
+    id: ID!
+  ): Post
+  allProducts(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): ProductPage!
+  # Find a document from the collection of 'User' by its id.
+  findUserByID(
+    # The 'User' document's ID
+    id: ID!
+  ): User
+  # Find a document from the collection of 'Permissions' by its id.
+  findPermissionsByID(
+    # The 'Permissions' document's ID
+    id: ID!
+  ): Permissions
+}
+
+type User {
+  avatar: String!
+  posts: [Post]!
+  email: String!
+  # The document's ID.
+  _id: ID!
+  permissions: Permissions!
+  id: ID!
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# 'User' input values
+input UserInput {
+  id: ID!
+  email: String!
+  avatar: String!
+  permissions: UserPermissionsRelation
+  posts: [ID]!
+}
+
+# Allow manipulating the relationship between the types 'User' and 'Permissions' using the field 'User.permissions'.
+input UserPermissionsRelation {
+  # Create a document of type 'Permissions' and associate it with the current document.
+  create: PermissionsInput
+  # Connect a document of type 'Permissions' with the current document using its ID.
+  connect: ID
+}
+

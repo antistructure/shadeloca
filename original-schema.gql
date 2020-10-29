@@ -1,0 +1,16 @@
+  type Product {
+    brand: String!
+    name: String!
+    description: String
+    productLink: String
+    imageLink: String
+    productType: String
+    category: String
+    tags: [String]
+    price: Float!
+    rating: Float
+  }
+
+  type Query {
+    allProducts: [Product!]
+  }

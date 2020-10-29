@@ -1,0 +1,48 @@
+type Product {
+  name: String!
+  updatedAt: Time
+  description: String
+  tags: [String]
+  price: Float!
+  productLink: String
+  productType: String
+  brand: String!
+  rating: Float
+  createdAt: Time
+  category: String
+  imageLink: String
+}
+
+input ProductInput {
+  name: String!
+  updatedAt: Time
+  description: String
+  tags: [String]
+  price: Float!
+  productLink: String
+  productType: String
+  brand: String!
+  rating: Float
+  createdAt: Time
+  category: String
+  imageLink: String
+}
+
+type Mutation {
+  createProduct(data: ProductInput!): Product!
+  updateProduct(
+    id: ID!
+    data: ProductInput!
+  ): Product
+  deleteProduct(id: ID!): Product
+  deleteProductByName(name: name!): Product
+  deleteProducts(ids: [ID!]): [Product]
+}
+
+type Query {
+  allProducts: [Product!]
+  findProduct(id: ID!): Product
+  findProductByName(name: name!): Product
+  findProducts(ids: [ID!]): [Product]
+  findProductsByName(names: [name!]): [Product]
+}

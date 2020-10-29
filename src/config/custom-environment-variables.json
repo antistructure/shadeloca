@@ -1,0 +1,9 @@
+{
+  "port": "27017",
+  "mongoDb": {
+    "hostname": "127.0.0.1",
+    "port": "DB_PORT",
+    "dbName": "DB_NAME"
+  },
+  "jwtSecret": "JWT_SECRET"
+}
